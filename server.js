@@ -30,6 +30,20 @@ const ideas = [{
         description: "orem ipsum dolor, sit amet consectetur adipisicing elit. Dicta esse nesciunt tenetur magnam",
         url: "http://rockeseat.com.br"
     },
+    {
+        img: "https://image.flaticon.com/icons/svg/2729/2729038.svg",
+        title: "Pintura",
+        category: "Criatividade",
+        description: "orem ipsum dolor, sit amet consectetur adipisicing elit. Dicta esse nesciunt tenetur magnam",
+        url: "http://rockeseat.com.br"
+    },
+    {
+        img: "https://image.flaticon.com/icons/svg/2729/2729048.svg",
+        title: "Recortes",
+        category: "Criatividade",
+        description: "orem ipsum dolor, sit amet consectetur adipisicing elit. Dicta esse nesciunt tenetur magnam",
+        url: "http://rockeseat.com.br"
+    },
 ]
 
 //configuar arquivos estáticos(css,script,imagens)
@@ -45,22 +59,27 @@ nunjucks.configure("views", {
 //criei uma rota '/'
 server.get("/", function (req, res) {
 
-    const lastIdeas = []
-    for (let idea of ideas) {
+    const reversedIdeas = [...ideas].reverse()
+
+    let lastIdeas = []
+    for (let idea of reversedIdeas) {
         if (lastIdeas.length < 2) {
             lastIdeas.push(idea)
         }
     }
 
-    console.log(lastIdeas)
-
     return res.render("index.html", {
-        ideas
+        ideas: lastIdeas
     })
 })
 
 server.get("/ideia", function (req, res) {
-    return res.render("ideia.html")
+
+    const reversedIdeas = [...ideas].reverse()
+
+    return res.render("ideia.html", {
+        ideas: reversedIdeas
+    })
 })
 
 //liguei meu servido na porta 3000
