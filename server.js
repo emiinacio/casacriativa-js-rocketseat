@@ -2,6 +2,8 @@
 const express = require("express")
 const server = express()
 
+const db = require("./db")
+
 const ideas = [{
         img: "https://image.flaticon.com/icons/svg/2729/2729007.svg",
         title: "Cursos de Programacao",
@@ -59,28 +61,34 @@ nunjucks.configure("views", {
 //criei uma rota '/'
 server.get("/", function (req, res) {
 
-    const reversedIdeas = [...ideas].reverse()
+    db.all(`SELECT * FROM ideas`, function (err, rows) {
+        if (err) return console.log(err)
 
-    let lastIdeas = []
-    for (let idea of reversedIdeas) {
-        if (lastIdeas.length < 2) {
-            lastIdeas.push(idea)
+        const reversedIdeas = [...rows].reverse()
+
+        let lastIdeas = []
+        for (let idea of reversedIdeas) {
+            if (lastIdeas.length < 2) {
+                lastIdeas.push(idea)
+            }
         }
-    }
 
-    return res.render("index.html", {
-        ideas: lastIdeas
+        return res.render("index.html", {
+            ideas: lastIdeas
+        })
     })
+
 })
 
 server.get("/ideia", function (req, res) {
+    db.all(`SELECT * FROM ideas`, function (err, rows) {
+        const reversedIdeas = [...ideas].reverse()
 
-    const reversedIdeas = [...ideas].reverse()
+        return res.render("ideia.html", {
+            ideas: reversedIdeas
 
-    return res.render("ideia.html", {
-        ideas: reversedIdeas
+        })
     })
 })
-
 //liguei meu servido na porta 3000
 server.listen(3000)
